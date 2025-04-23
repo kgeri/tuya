@@ -1,0 +1,10 @@
+certifi==2025.1.31
+cffi==1.17.1
+charset-normalizer==3.4.1
+colorama==0.4.6
+cryptography==44.0.2
+idna==3.10
+pycparser==2.22
+requests==2.32.3
+tinytuya==1.16.1
+urllib3==2.4.0
