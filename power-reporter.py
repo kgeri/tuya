@@ -12,6 +12,7 @@ with open('config.toml', 'rb') as f:
 
 class OutletMetricsCollector(Collector):
     def collect(self):
+        g = GaugeMetricFamily('power_usage_watts', 'Power usage of outlets (W)', labels=['location'])
         for device in config['devices']:
             name = device['name']
             power = self._get_power_usage(
@@ -19,7 +20,8 @@ class OutletMetricsCollector(Collector):
                 device['ip'],
                 device['local_key'],
             )
-            yield GaugeMetricFamily(f'outlet_{name}', 'Power usage of outlets (W)', power)
+            g.add_metric([name], power)
+        yield g
 
     def _get_power_usage(self, dev_id: str, address: str, local_key: str) -> float:
         outlet = tinytuya.OutletDevice(dev_id, address, local_key, version=3.3)
