@@ -1,6 +1,6 @@
-# iGET Power 4 USB
+# Tuya IoT integrations
 
-## Hardware prep
+## Hardware prep (iGET Power 4 USB)
 
 ```
 pipx install tonytuya
@@ -28,6 +28,11 @@ See https://packaging.python.org/en/latest/guides/installing-using-pip-and-virtu
 python3 -m venv .venv
 source .venv/bin/activate
 python3 -m pip install -r requirements.txt
+```
+
+```
+cp config.sample.toml config.toml
+# Add the ids and keys to the config
 ```
 
 # iGET Documentation

@@ -1,0 +1,11 @@
+[[devices]]
+name = "Outlet 1"
+ip = "192.168.1.12"
+device_id = "bbcda49ff1a313300d2oak"
+local_key = "zkfdmY={_y,((acC"
+
+[[devices]]
+name = "Outlet 2"
+ip = "192.168.1.13"
+device_id = "bbcda49ff1a313300d2oak"
+local_key = "zkfdmY={_y,((acC"
