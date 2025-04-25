@@ -1,11 +1,11 @@
 [[devices]]
-name = "Outlet 1"
+name = "living_room"
 ip = "192.168.1.12"
 device_id = "bbcda49ff1a313300d2oak"
 local_key = "zkfdmY={_y,((acC"
 
 [[devices]]
-name = "Outlet 2"
+name = "server_room"
 ip = "192.168.1.13"
 device_id = "bbcda49ff1a313300d2oak"
 local_key = "zkfdmY={_y,((acC"

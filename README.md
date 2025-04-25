@@ -35,6 +35,13 @@ cp config.sample.toml config.toml
 # Add the ids and keys to the config
 ```
 
+## Running locally
+
+```
+docker build -t power-reporter .
+docker run -it --rm -p 9102:9102 power-reporter:latest
+```
+
 # iGET Documentation
 
 Response returned by `tinytuya`, and what it means:
