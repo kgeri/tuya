@@ -1,11 +1,16 @@
-[[devices]]
+[[tuya_device]]
 name = "living_room"
 ip = "192.168.1.12"
 device_id = "bbcda49ff1a313300d2oak"
 local_key = "zkfdmY={_y,((acC"
 
-[[devices]]
+[[tuya_device]]
 name = "server_room"
 ip = "192.168.1.13"
 device_id = "bbcda49ff1a313300d2oak"
 local_key = "zkfdmY={_y,((acC"
+
+[[nut_device]]
+name = "server_room2"
+ip = "192.168.3.3"
+device_id = "Eaton"

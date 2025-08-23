@@ -3,11 +3,12 @@
 from prometheus_client import make_wsgi_app
 from prometheus_client.core import CollectorRegistry, GaugeMetricFamily
 from prometheus_client.registry import Collector
+from PyNUTClient import PyNUT
 from wsgiref.simple_server import make_server
 import logging
 import time
-import tomllib
 import tinytuya
+import tomllib
 
 
 logging.basicConfig(
@@ -22,18 +23,24 @@ with open('config.toml', 'rb') as f:
 class OutletMetricsCollector(Collector):
     def collect(self):
         g = GaugeMetricFamily('power_usage_watts', 'Power usage of outlets (W)', labels=['location'])
-        for device in config['devices']:
+        OutletMetricsCollector._report_tuya_devices(g)
+        OutletMetricsCollector._report_nut_devices(g)
+        yield g
+
+    @staticmethod
+    def _report_tuya_devices(g: GaugeMetricFamily):
+        for device in config.get('tuya_device', []):
             name = device['name']
-            power = self._get_power_usage(
+            power = OutletMetricsCollector._get_tuya_power_usage(
                 name,
                 device['device_id'],
                 device['ip'],
                 device['local_key'],
             )
-            g.add_metric([name], power)
-        yield g
+            if power: g.add_metric([name], power)
 
-    def _get_power_usage(self, name: str, dev_id: str, address: str, local_key: str) -> float | None:
+    @staticmethod
+    def _get_tuya_power_usage(name: str, dev_id: str, address: str, local_key: str) -> float | None:
         outlet = tinytuya.OutletDevice(dev_id, address, local_key, version=3.3)
         outlet.set_socketTimeout(3)
         status = outlet.status()
@@ -43,6 +50,16 @@ class OutletMetricsCollector(Collector):
             case _:
                 logging.error(f'Failed reporting {name}. Unrecognized status: {status}')
                 return None
+    
+    @staticmethod
+    def _report_nut_devices(g: GaugeMetricFamily):
+        for device in config.get('nut_device', []):
+            name = device['name']
+
+            nut = PyNUT.PyNUTClient(host = device['ip'], port = device.get('port', 3493))
+            vars = nut.GetUPSVars(device['device_id'])
+            power = float(vars[b'ups.realpower'].decode('utf-8'))
+            g.add_metric([name], power)
 
 registry = CollectorRegistry()
 registry.register(OutletMetricsCollector())
