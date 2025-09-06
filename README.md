@@ -2,15 +2,15 @@
 
 ## Hardware prep (iGET Power 4 USB)
 
-```
+```shell
 pipx install tonytuya
 tinytuya scan
 ```
 
-Follow https://github.com/jasonacox/tinytuya#setup-wizard---getting-local-keys.
+Follow <https://github.com/jasonacox/tinytuya#setup-wizard---getting-local-keys>.
 Roughly:
 
-* Register on https://iot.tuya.com/
+* Register on <https://iot.tuya.com/>
 * Create a new project, "Development Method" must be "Smart Home"
 * Install the "Tuya Smart" app on mobile, do the pairing with the devices (iGET is Tuya-compatible)
 * Add "IoT Core" and "Authorization Token Management" to Service API
@@ -22,27 +22,27 @@ Roughly:
 
 ## Project setup
 
-See https://packaging.python.org/en/latest/guides/installing-using-pip-and-virtual-environments/#create-a-new-virtual-environment
+See <https://packaging.python.org/en/latest/guides/installing-using-pip-and-virtual-environments/#create-a-new-virtual-environment>
 
-```
+```shell
 python3 -m venv .venv
 source .venv/bin/activate
 python3 -m pip install -r requirements.txt
 ```
 
-```
+```shell
 cp config.sample.toml config.toml
 # Add the ids and keys to the config
 ```
 
 ## Running locally
 
-```
+```shell
 docker build -t power-reporter .
 docker run -it --rm -p 9102:9102 power-reporter:latest
 ```
 
-# iGET Documentation
+## iGET Documentation
 
 Response returned by `tinytuya`, and what it means:
 
@@ -62,6 +62,8 @@ Response returned by `tinytuya`, and what it means:
 | 41    | cycle_time    | ???                                                               |
 | 42    | random_time   | ???                                                               |
 
-# Links
+## Links
 
-* https://github.com/home-assistant/core/blob/dev/homeassistant/components/tuya/sensor.py
+* <https://github.com/home-assistant/core/blob/dev/homeassistant/components/tuya/sensor.py>
+* [Beken BK7231TQN32](https://www.elektroda.com/news/news3951016.html)
+* [Geeni iHome 6 outlet powerstrip](https://www.elektroda.com/news/news3966478.html) seems to be the same hardware?
