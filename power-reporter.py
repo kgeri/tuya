@@ -9,6 +9,7 @@ import logging
 import time
 import tinytuya
 import tomllib
+import traceback
 
 
 logging.basicConfig(
@@ -22,10 +23,14 @@ with open('config.toml', 'rb') as f:
 
 class OutletMetricsCollector(Collector):
     def collect(self):
-        g = GaugeMetricFamily('power_usage_watts', 'Power usage of outlets (W)', labels=['location'])
-        OutletMetricsCollector._report_tuya_devices(g)
-        OutletMetricsCollector._report_nut_devices(g)
-        yield g
+        try:
+            g = GaugeMetricFamily('power_usage_watts', 'Power usage of outlets (W)', labels=['location'])
+            OutletMetricsCollector._report_tuya_devices(g)
+            OutletMetricsCollector._report_nut_devices(g)
+            yield g
+        except Exception as e:
+            logging.error(f'Failed to collect metrics: {str(e)}')
+            logging.error(traceback.format_exc())
 
     @staticmethod
     def _report_tuya_devices(g: GaugeMetricFamily):
@@ -37,13 +42,16 @@ class OutletMetricsCollector(Collector):
                 device['ip'],
                 device['local_key'],
             )
-            if power: g.add_metric([name], power)
+            if power:
+                g.add_metric([name], power)
+                logging.info(f'Reported {name}: {power}W')
 
     @staticmethod
     def _get_tuya_power_usage(name: str, dev_id: str, address: str, local_key: str) -> float | None:
         outlet = tinytuya.OutletDevice(dev_id, address, local_key, version=3.3)
         outlet.set_socketTimeout(3)
         status = outlet.status()
+        outlet.close()
 
         match status:
             case { 'dps': {'19': cur_power} }: return cur_power / 10
@@ -60,6 +68,7 @@ class OutletMetricsCollector(Collector):
             vars = nut.GetUPSVars(device['device_id'])
             power = float(vars[b'ups.realpower'].decode('utf-8'))
             g.add_metric([name], power)
+            logging.info(f'Reported {name}: {power}W')
 
 registry = CollectorRegistry()
 registry.register(OutletMetricsCollector())
