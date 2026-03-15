@@ -50,6 +50,8 @@ class OutletMetricsCollector(Collector):
     def _get_tuya_power_usage(name: str, dev_id: str, address: str, local_key: str) -> float | None:
         outlet = tinytuya.OutletDevice(dev_id, address, local_key, version=3.3)
         outlet.set_socketTimeout(3)
+        outlet.set_socketRetryLimit(1)
+        outlet.set_retry(False)
         status = outlet.status()
         outlet.close()
 
