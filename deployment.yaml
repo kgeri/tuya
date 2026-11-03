@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
         - name: power-reporter
-          image: srvu:5000/power-reporter:${IMAGE_TAG}
+          image: docker.ogreg.org/power-reporter:${IMAGE_TAG}
           imagePullPolicy: Always
           resources:
             requests:
